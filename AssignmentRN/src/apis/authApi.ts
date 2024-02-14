@@ -9,7 +9,7 @@ class AuthApi {
             const res = await authInstance[method || 'get'](path, {
                 data: data,
             })
-            return res.status
+            return res
         } catch (error) {
             console.log('>>>Error', error);
             return

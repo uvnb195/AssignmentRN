@@ -2,6 +2,7 @@ import {
   ScrollView,
   StyleSheet,
   Text,
+  ToastAndroid,
   Touchable,
   TouchableOpacity,
   View,
@@ -35,11 +36,6 @@ export default function SignUp() {
   const navigation = useNavigation<StackNavigationProp<StackParams>>();
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('')
-
-  const resetNav = CommonActions.reset({
-    index: 0,
-    routes: [{ name: 'MainRoute' }],
-  });
 
   const [input, setInput] = useState<SignupState>({
     name: "",
@@ -75,7 +71,7 @@ export default function SignUp() {
       return
     } else {
       const res = await authApi.HandleAuthentication(`/user?email=${input.email}`, 'get')
-      if (res === 200) {
+      if (res?.status === 200) {
         setErrorMessage('Email already exists')
         setLoading(false)
         return
@@ -84,12 +80,18 @@ export default function SignUp() {
 
     const res = await authApi.HandleAuthentication('/register', 'post', input);
     setLoading(false);
-    if (res !== 201) setErrorMessage('Unknow error, please try again')
-    else
+    if (res?.status !== 201) setErrorMessage('Unknow error, please try again')
+    else {
+      ToastAndroid.showWithGravity(
+        "Register successfully!",
+        ToastAndroid.SHORT,
+        ToastAndroid.CENTER
+      )
       navigation.navigate('SignIn', {
         email: email,
         password: password
       })
+    }
     return
   }
 

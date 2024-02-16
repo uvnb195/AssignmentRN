@@ -131,7 +131,8 @@ export default function SignUp() {
                 I agree with <Text style={styles.textBold}>Terms</Text> &{' '}
                 <Text style={styles.textBold}>Privacy</Text>
               </Text>
-            </TouchableOpacity>{
+            </TouchableOpacity>
+            {
               errorMessage ?
                 <Text style={{ color: warningColor }}>{errorMessage}</Text>
                 : null

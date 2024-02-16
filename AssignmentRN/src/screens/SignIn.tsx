@@ -12,7 +12,7 @@ import LogInActionBar from '../components/LogInActionBar';
 import InputField from '../components/InputField';
 import Spacer from '../components/Spacer';
 import CheckBox, { CheckBoxProps } from '@react-native-community/checkbox';
-import { primaryColor, secondaryColor } from '../../theme';
+import { primaryColor, secondaryColor, warningColor } from '../../theme';
 import React, { useEffect, useState } from 'react';
 import CustomButton from '../components/CustomButton';
 import BreakerButtonSection from '../components/BreakerButtonSection';
@@ -24,32 +24,58 @@ import PasswordField from '../components/PasswordField';
 import { NativeStackNavigationProp, NativeStackScreenProps } from '@react-navigation/native-stack';
 import { authApi } from '../apis/authApi';
 import LoadingComponent from '../components/LoadingComponent';
+import { Validation } from '../utils/validation';
 
 type SignInProps = NativeStackScreenProps<StackParams, 'SignIn'>
 const SignIn: React.FC<SignInProps> = ({ route }) => {
-  const navigation = useNavigation<StackNavigationProp<StackParams>>();
-  const email = route.params?.email || ""
-  console.log(email);
-
-  const password = route.params?.password || ""
-  const [input, setInput] = useState({ email, password })
+  const navigation = useNavigation<StackNavigationProp<StackParams>>()
+  const [input, setInput] = useState({
+    email: route.params?.email || "",
+    password: route.params?.password || "",
+    rememberLogin: false
+  })
   useEffect(() => {
-    setInput({ email, password })
-  }, [email, password])
+    console.log(input);
+
+  }, [input])
   const [loading, setLoading] = useState(false)
+  const [errorMessage, setErrorMessage] = useState('')
 
   const resetNav = CommonActions.reset({
     index: 0,
     routes: [{ name: 'MainRoute' }],
   });
-  const [checkBox, toggleCheckBox] = useState(false);
+
+  const validationInput = (email: string, password: string) => {
+    if (Validation.isAnyBlank([email, password])) {
+      setErrorMessage('Please fill blank')
+      return false
+    } else if (!Validation.email(email)) {
+      setErrorMessage('It\'s not an email, please try again')
+      return false
+    }
+    else if (!Validation.password(password)) {
+      setErrorMessage('Password must be at least 8 characters.')
+      return false
+    }
+    return true
+  }
 
   const handleSignIn = async () => {
+    setErrorMessage("")
+    const { email, password } = input
     setLoading(true)
+    const validation = validationInput(email, password)
+    if (!validation) {
+      setLoading(false)
+      return
+    }
     const res = await authApi.HandleAuthentication(`/user?email=${input.email}&password=${input.password}`, 'get')
-    if (res?.status === 200) {
+    if (res && res?.status === 200) {
       ToastAndroid.showWithGravity("Login successfully", ToastAndroid.SHORT, ToastAndroid.CENTER)
       navigation.dispatch(resetNav)
+    } else if (res && (res?.status === 404 || res?.status === 400)) {
+      setErrorMessage("Email or password does not match, please try again")
     }
     setLoading(false)
   }
@@ -72,6 +98,24 @@ const SignIn: React.FC<SignInProps> = ({ route }) => {
               placeHolder="********"
               onTextChange={v => setInput({ ...input, password: v })}
             />
+
+            <TouchableOpacity
+              style={styles.termsSection}
+              onPress={() => setInput({ ...input, rememberLogin: !input.rememberLogin })}>
+              <CheckBox
+                value={input.rememberLogin}
+                onValueChange={v => setInput({ ...input, rememberLogin: v })}
+                disabled={false}
+                tintColors={{ true: secondaryColor }}
+                style={styles.checkBox}
+              />
+              <Text style={[styles.text, styles.textBold]}>Remember me </Text>
+            </TouchableOpacity>
+            {
+              errorMessage ?
+                <Text style={{ color: warningColor }}>{errorMessage}</Text>
+                : null
+            }
             <View style={styles.buttonSection}>
               <CustomButton style={styles.button} title="Sign In" onClick={handleSignIn} />
               <BreakerButtonSection />

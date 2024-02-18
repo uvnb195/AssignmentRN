@@ -37,7 +37,7 @@ const findUserByEmail = async (req, res) => {
 
             console.log("Password status:", match);
             if (match) {
-                return res.status(200).json({ message: "Password match" })
+                return res.status(200).json({ message: "Password match", user: user })
             } else {
                 return res.status(400).json({ message: "Password does not match" })
             }

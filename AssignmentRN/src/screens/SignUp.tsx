@@ -18,12 +18,12 @@ import BreakerButtonSection from '../components/BreakerButtonSection';
 import ScreenWrapper from '../components/ScreenWrapper';
 import { CommonActions, useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { StackParams } from '../../App';
 import PasswordField from '../components/PasswordField';
 import { authApi } from '../apis/authApi';
 import LoadingComponent from '../components/LoadingComponent';
 import { Validation } from '../utils/validation';
 import { AxiosResponse } from 'axios';
+import { WelcomeRoutesStackParams } from '../routes/WelcomeRoutes';
 
 type SignupState = {
   name: string,
@@ -33,7 +33,7 @@ type SignupState = {
 }
 
 export default function SignUp() {
-  const navigation = useNavigation<StackNavigationProp<StackParams>>();
+  const navigation = useNavigation<StackNavigationProp<WelcomeRoutesStackParams>>();
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('')
 

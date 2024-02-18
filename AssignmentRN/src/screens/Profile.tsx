@@ -1,21 +1,33 @@
-import {StyleSheet, Text, View} from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import ScreenWrapper from '../components/ScreenWrapper';
-import {styles as homeStyles} from '../screens/Home';
+import { styles as homeStyles } from '../screens/Home';
 import HomeActionBar from '../components/HomeActionBar';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import {primaryColor} from '../../theme';
+import { primaryColor } from '../../theme';
 import OptionButton from '../components/OptionButton';
 import CustomButton from '../components/CustomButton';
-import {CommonActions, useNavigation} from '@react-navigation/native';
-import {StackNavigationProp} from '@react-navigation/stack';
-import {StackParams} from '../../App';
+import { CommonActions, useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { MainRoutesStackParams } from '../routes/MainRoutes';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { StartRoutesStackParams } from '../routes/StartRoutes';
+import { useDispatch } from 'react-redux';
+import { updateLogger } from '../redux/actions';
 
 export default function ProfileScreen() {
-  const navigation = useNavigation<StackNavigationProp<StackParams>>();
+  const navigation = useNavigation<StackNavigationProp<MainRoutesStackParams>>();
   const resetNav = CommonActions.reset({
     index: 0,
-    routes: [{name: 'Welcome'}],
+    routes: [{ name: 'SplashScreen' }],
   });
+
+  const dispatch = useDispatch()
+
+  const handleLogOut = async () => {
+    await AsyncStorage.removeItem("isLogged")
+    // dispatch(updateLogger(""))
+    navigation.dispatch(resetNav)
+  }
   return (
     <ScreenWrapper style={homeStyles.container}>
       <HomeActionBar
@@ -23,7 +35,7 @@ export default function ProfileScreen() {
         rightIcon={
           <Ionicons size={30} name="exit-outline" color={primaryColor} />
         }
-        onRightClick={() => navigation.dispatch(resetNav)}
+        onRightClick={handleLogOut}
       />
       <View style={styles.infoSection}>
         <Text style={styles.name}>Đào Hữu Quân</Text>

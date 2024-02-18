@@ -2,13 +2,16 @@ import { Image, StyleSheet, Text, View } from 'react-native';
 import CustomButton from '../components/CustomButton';
 import ScreenWrapper from '../components/ScreenWrapper';
 import { useNavigation } from '@react-navigation/native';
-import { StackParams } from '../../App';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { instance as axiosInstance } from '../apis/axiosClient';
+import { useDispatch } from 'react-redux';
+import { logSomeThing, logSomeThingElse } from '../redux';
+import { WelcomeRoutesStackParams } from '../routes/WelcomeRoutes';
 
 export default function Welcome() {
-  const navigation = useNavigation<StackNavigationProp<StackParams>>();
+  const navigation = useNavigation<StackNavigationProp<WelcomeRoutesStackParams>>();
 
+  const dispatch = useDispatch();
 
   return (
     <ScreenWrapper>
@@ -30,6 +33,8 @@ export default function Welcome() {
             style={styles.solidButton}
             title="Sign Up"
             onClick={() =>
+
+              // dispatch(logSomeThingElse())
               navigation.navigate('SignUp')
             }
           />
@@ -37,7 +42,10 @@ export default function Welcome() {
             style={styles.textButton}
             title="Sign In"
             color="#4F63AC"
-            onClick={() => navigation.navigate('SignIn')}
+            onClick={() =>
+              // dispatch(logSomeThing())
+              navigation.navigate('SignIn', {})
+            }
           />
         </View>
       </View>

@@ -19,31 +19,33 @@ import BreakerButtonSection from '../components/BreakerButtonSection';
 import ScreenWrapper from '../components/ScreenWrapper';
 import { CommonActions, useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { StackParams } from '../../App';
 import PasswordField from '../components/PasswordField';
 import { NativeStackNavigationProp, NativeStackScreenProps } from '@react-navigation/native-stack';
 import { authApi } from '../apis/authApi';
 import LoadingComponent from '../components/LoadingComponent';
 import { Validation } from '../utils/validation';
+import { WelcomeRoutesStackParams } from '../routes/WelcomeRoutes';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useDispatch, useSelector } from 'react-redux';
+import { updateLogger } from '../redux/actions';
 
-type SignInProps = NativeStackScreenProps<StackParams, 'SignIn'>
+type SignInProps = NativeStackScreenProps<WelcomeRoutesStackParams, 'SignIn'>
 const SignIn: React.FC<SignInProps> = ({ route }) => {
-  const navigation = useNavigation<StackNavigationProp<StackParams>>()
+  const navigation = useNavigation<StackNavigationProp<WelcomeRoutesStackParams>>()
   const [input, setInput] = useState({
     email: route.params?.email || "",
     password: route.params?.password || "",
     rememberLogin: false
   })
-  useEffect(() => {
-    console.log(input);
-
-  }, [input])
   const [loading, setLoading] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
 
+  // const dispatch = useDispatch()
+
+
   const resetNav = CommonActions.reset({
     index: 0,
-    routes: [{ name: 'MainRoute' }],
+    routes: [{ name: 'MainRoutes' }],
   });
 
   const validationInput = (email: string, password: string) => {
@@ -72,6 +74,11 @@ const SignIn: React.FC<SignInProps> = ({ route }) => {
     }
     const res = await authApi.HandleAuthentication(`/user?email=${input.email}&password=${input.password}`, 'get')
     if (res && res?.status === 200) {
+      if (input.rememberLogin) {
+        await AsyncStorage.setItem("isLogged", JSON.stringify(res.data.user.password))
+        // dispatch(updateLogger(res.data.user.password))
+      }
+
       ToastAndroid.showWithGravity("Login successfully", ToastAndroid.SHORT, ToastAndroid.CENTER)
       navigation.dispatch(resetNav)
     } else if (res && (res?.status === 404 || res?.status === 400)) {

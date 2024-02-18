@@ -1,8 +1,6 @@
 export class Validation {
     static isAnyBlank(...values: any[]) {
         for (let value of values) {
-            console.log(value);
-
             if (value === '' || value === false) return true
         }
         return false

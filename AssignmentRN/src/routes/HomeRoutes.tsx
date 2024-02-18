@@ -1,14 +1,14 @@
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import {StyleSheet, View} from 'react-native';
-import HomeScreen from './Home';
-import BookMarkScreen from './BookMark';
-import ProfileScreen from './Profile';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { StyleSheet, View } from 'react-native';
+import HomeScreen from '../screens/Home';
+import BookMarkScreen from '../screens/BookMark';
+import ProfileScreen from '../screens/Profile';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import {primaryColor} from '../../theme';
+import { primaryColor } from '../../theme';
 
 const Tab = createBottomTabNavigator();
 
-export default function MainRoute() {
+export default function HomeRoutes() {
   return (
     <Tab.Navigator
       screenOptions={{
@@ -24,7 +24,7 @@ export default function MainRoute() {
         name="Home"
         component={HomeScreen}
         options={{
-          tabBarIcon: ({focused}) => (
+          tabBarIcon: ({ focused }) => (
             <Ionicons
               name={focused ? 'home' : 'home-outline'}
               size={24}
@@ -37,7 +37,7 @@ export default function MainRoute() {
         name="BookMark"
         component={BookMarkScreen}
         options={{
-          tabBarIcon: ({focused}) => (
+          tabBarIcon: ({ focused }) => (
             <Ionicons
               name={focused ? 'bookmarks' : 'bookmarks-outline'}
               size={24}
@@ -50,7 +50,7 @@ export default function MainRoute() {
         name="Profile"
         component={ProfileScreen}
         options={{
-          tabBarIcon: ({focused}) => (
+          tabBarIcon: ({ focused }) => (
             <Ionicons
               name={focused ? 'person' : 'person-outline'}
               size={24}

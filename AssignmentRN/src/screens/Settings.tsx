@@ -6,18 +6,18 @@ import {
   View,
 } from 'react-native';
 import ScreenWrapper from '../components/ScreenWrapper';
-import HomeActionBar, {arrowLeftIcon} from '../components/HomeActionBar';
+import HomeActionBar, { arrowLeftIcon } from '../components/HomeActionBar';
 import AntDesignIcons from 'react-native-vector-icons/AntDesign';
-import {styles as homeStyles} from '../screens/Home';
-import {primaryColor, secondaryColor} from '../../theme';
-import {useEffect, useRef, useState} from 'react';
+import { styles as homeStyles } from '../screens/Home';
+import { primaryColor, secondaryColor } from '../../theme';
+import { useEffect, useRef, useState } from 'react';
 import OptionButton from '../components/OptionButton';
-import {useNavigation} from '@react-navigation/native';
-import {StackNavigationProp} from '@react-navigation/stack';
-import {StackParams} from '../../App';
+import { useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { MainRoutesStackParams } from '../routes/MainRoutes';
 
 export default function Settings() {
-  const navigation = useNavigation<StackNavigationProp<StackParams>>();
+  const navigation = useNavigation<StackNavigationProp<MainRoutesStackParams>>();
   const [enableEdit, setEnableEdit] = useState(false);
   const nameInputRef = useRef<TextInput | null>(null);
   useEffect(() => {
@@ -46,7 +46,7 @@ export default function Settings() {
           />
         </TouchableOpacity>
       </View>
-      <View style={[styles.inputSection, {borderWidth: enableEdit ? 1 : 0}]}>
+      <View style={[styles.inputSection, { borderWidth: enableEdit ? 1 : 0 }]}>
         <Text style={styles.inputTitle}>Name</Text>
         <TextInput
           style={styles.inputValue}
@@ -55,7 +55,7 @@ export default function Settings() {
           ref={nameInputRef}
         />
       </View>
-      <View style={[styles.inputSection, {borderWidth: enableEdit ? 1 : 0}]}>
+      <View style={[styles.inputSection, { borderWidth: enableEdit ? 1 : 0 }]}>
         <Text style={styles.inputTitle}>Email</Text>
         <TextInput
           style={styles.inputValue}
@@ -96,7 +96,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     padding: 10,
   },
-  inputTitle: {fontSize: 13},
+  inputTitle: { fontSize: 13 },
   inputValue: {
     fontWeight: '600',
     color: primaryColor,

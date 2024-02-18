@@ -15,7 +15,7 @@ type ScreenWrapperProps = {
 const ScreenWrapper: React.FC<ScreenWrapperProps> = ({ children, style }) => {
   return (
     <View style={{ flex: 1, backgroundColor: 'white' }}>
-      <SafeAreaView style={[style, styles.container]}>{children}</SafeAreaView>
+      <SafeAreaView style={[styles.container, style]}>{children}</SafeAreaView>
     </View>
   );
 };

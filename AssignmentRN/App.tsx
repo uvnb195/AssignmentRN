@@ -5,42 +5,27 @@ import { StatusBar, Text } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import 'react-native-gesture-handler';
-import MainRoute from './src/screens/MainRoute';
+import HomeRoutes from './src/routes/HomeRoutes';
 import Settings from './src/screens/Settings';
 import MyList from './src/screens/MyList';
 import CreateList from './src/screens/CreateList';
-
-export type StackParams = {
-  Welcome: undefined;
-  SignUp: undefined;
-  SignIn: {
-    email?: string,
-    password?: string
-  };
-  MainRoute: undefined;
-  Settings: undefined;
-  MyList: undefined;
-};
-
-const Stack = createStackNavigator<StackParams>();
+import { Provider } from 'react-redux';
+import { store } from './src/redux';
+import StartRoutes from './src/routes/StartRoutes';
+import MainRoutes from './src/routes/MainRoutes';
 
 export default function App() {
   return (
-    <NavigationContainer>
-      <StatusBar
-        translucent
-        backgroundColor={'transparent'}
-        barStyle={'dark-content'}
-      />
-      <Stack.Navigator screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="Welcome" component={Welcome} />
-        <Stack.Screen name="SignIn" component={SignIn} />
-        <Stack.Screen name="SignUp" component={SignUp} />
-        <Stack.Screen name="MainRoute" component={MainRoute} />
-        <Stack.Screen name="Settings" component={Settings} />
-        <Stack.Screen name="MyList" component={MyList} />
-      </Stack.Navigator>
-      {/* <CreateList /> */}
-    </NavigationContainer>
+    <Provider store={store}>
+
+      <NavigationContainer>
+        <StatusBar
+          translucent
+          backgroundColor={'transparent'}
+          barStyle={'dark-content'}
+        />
+        <StartRoutes />
+      </NavigationContainer>
+    </Provider>
   );
 }

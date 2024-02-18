@@ -4,6 +4,7 @@ const app = express()
 
 const connectDb = require('./src/configs/connectDb');
 const { register, getUserByEmail } = require('./src/controllers/authController');
+const { addToDb, getGroceryIndex, addItem, getGroceryItem } = require('./src/controllers/productController');
 // const UserModel = require('./src/model/User');
 connectDb();
 
@@ -20,6 +21,10 @@ app.post('/register', register)
 
 // get user by email
 app.get('/user', getUserByEmail)
+app.get('/addData', addToDb)
+app.get('/index', getGroceryIndex)
+app.get('/add', addItem)
+app.get('/item', getGroceryItem)
 
 app.listen(PORT, (error) => {
     if (error) {

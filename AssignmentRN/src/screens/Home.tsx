@@ -1,36 +1,36 @@
-import {StyleSheet, Text, View} from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import ScreenWrapper from '../components/ScreenWrapper';
 import HomeActionBar from '../components/HomeActionBar';
-import ItemIndex, {ItemIndexData} from '../components/ItemIndex';
+import ItemIndex, { ItemIndexData } from '../components/ItemIndex';
 import ItemIndexList from '../components/ItemIndexList';
 import BigItem from '../components/BigItem';
-import {FlatList} from 'react-native';
-import {useEffect, useState} from 'react';
-import {Circle as ProgressCircle} from 'react-native-progress';
-import {primaryColor} from '../../theme';
+import { FlatList } from 'react-native';
+import { useEffect, useState } from 'react';
+import { Circle as ProgressCircle } from 'react-native-progress';
+import { primaryColor } from '../../theme';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 const listItemIndex: ItemIndexData[] = [
-  {name: 'Popular', imgSource: require('../../assets/icons/star.png')},
-  {name: 'Bed', imgSource: require('../../assets/icons/bed.png')},
+  { name: 'Popular', imgSource: require('../../assets/icons/star.png') },
+  { name: 'Bed', imgSource: require('../../assets/icons/bed.png') },
   {
     name: 'Book Shelves',
     imgSource: require('../../assets/icons/bookshelves.png'),
   },
-  {name: 'Bowl', imgSource: require('../../assets/icons/bowl.png')},
-  {name: 'Chair', imgSource: require('../../assets/icons/chair.png')},
-  {name: 'Door', imgSource: require('../../assets/icons/door.png')},
-  {name: 'Gas Stove', imgSource: require('../../assets/icons/gas-stove.png')},
-  {name: 'Lamp', imgSource: require('../../assets/icons/lamp.png')},
-  {name: 'Light', imgSource: require('../../assets/icons/light.png')},
-  {name: 'Sink', imgSource: require('../../assets/icons/sink.png')},
-  {name: 'Sofa', imgSource: require('../../assets/icons/sofa.png')},
-  {name: 'Table', imgSource: require('../../assets/icons/table-work.png')},
+  { name: 'Bowl', imgSource: require('../../assets/icons/bowl.png') },
+  { name: 'Chair', imgSource: require('../../assets/icons/chair.png') },
+  { name: 'Door', imgSource: require('../../assets/icons/door.png') },
+  { name: 'Gas Stove', imgSource: require('../../assets/icons/gas-stove.png') },
+  { name: 'Lamp', imgSource: require('../../assets/icons/lamp.png') },
+  { name: 'Light', imgSource: require('../../assets/icons/light.png') },
+  { name: 'Sink', imgSource: require('../../assets/icons/sink.png') },
+  { name: 'Sofa', imgSource: require('../../assets/icons/sofa.png') },
+  { name: 'Table', imgSource: require('../../assets/icons/table-work.png') },
   {
     name: 'Washer Machine',
     imgSource: require('../../assets/icons/washer-machine.png'),
   },
-  {name: 'Window', imgSource: require('../../assets/icons/window-frame.png')},
+  { name: 'Window', imgSource: require('../../assets/icons/window-frame.png') },
 ];
 
 export default function HomeScreen() {
@@ -42,6 +42,7 @@ export default function HomeScreen() {
     }
   }, [selected]);
   const renderBigItem = (title: string) => <BigItem title={title} />;
+
   return (
     <ScreenWrapper style={styles.container}>
       <HomeActionBar
@@ -65,10 +66,10 @@ export default function HomeScreen() {
           indeterminate
         />
       ) : (
-        <View style={{flex: 1}}>
+        <View style={{ flex: 1 }}>
           <FlatList
             data={[1, 2, 3, 4, 5, 6]}
-            renderItem={({item}) => renderBigItem(`Item number ${item}`)}
+            renderItem={({ item }) => renderBigItem(`Item number ${item}`)}
             numColumns={2}
           />
         </View>

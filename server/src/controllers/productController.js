@@ -43,7 +43,7 @@ const getGroceryIndex = async (req, res) => {
         const { name } = req.query
         const find = name ? await GroceryIndexModel.find({ name: name }) : await GroceryIndexModel.find()
 
-        res.status(202).json({ message: "OK", counter: find.length, index: find })
+        res.status(200).json({ message: "Found data", counter: find.length, data: find })
     } catch (err) {
         console.log(">>>Error fecth grocery", err);
         res.status(202).json({ message: "OK2" })

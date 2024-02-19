@@ -1,7 +1,8 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const iniState = {
-    passwordHash: ""
+    passwordHash: "",
+    indexGrocery: [],
 }
 
 const rootReducer = (state = iniState, action: any) => {
@@ -13,6 +14,14 @@ const rootReducer = (state = iniState, action: any) => {
                 ...state,
                 passwordHash: action.payload
             }
+        }
+
+        case "Fetch Index": {
+            return {
+                ...state,
+                indexGrocery: action.payload
+            }
+
         }
 
         default: {

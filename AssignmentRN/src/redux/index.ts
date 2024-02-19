@@ -1,3 +1,3 @@
 export { store } from "./store";
 
-export { logSomeThing, logSomeThingElse } from "./actions"
+export { updateLogger, fetchIndexGrocery } from "./actions"

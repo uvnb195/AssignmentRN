@@ -9,23 +9,29 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../redux/reducer";
+import { authApi } from "../apis/authApi";
 const height = Dimensions.get("window").height;
 
 const SplashScreen = () => {
     const navigation = useNavigation<NativeStackNavigationProp<StartRoutesStackParams>>()
-    const navigate = async () => {
-        setTimeout(() => { isLogged() }, 1500)
-    }
-
 
     useEffect(() => {
-        navigate()
+        isLogged()
     }, [])
 
     const isLogged = async () => {
-        const res = await AsyncStorage.getItem('isLogged')
-        if (!res) navigation.replace("WelcomeRoutes")
-        else navigation.replace("MainRoutes")
+        const isLogged = await AsyncStorage.getItem('isLogged')
+        if (!isLogged) navigation.replace("WelcomeRoutes")
+        else {
+            const res = await authApi.CheckTokenExp(isLogged)
+            if (res?.status != 200) {
+                await AsyncStorage.removeItem("isLogged")
+                navigation.replace("WelcomeRoutes")
+            }
+            else {
+                navigation.replace("MainRoutes")
+            }
+        }
     }
 
 

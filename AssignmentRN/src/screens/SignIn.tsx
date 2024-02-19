@@ -65,17 +65,19 @@ const SignIn: React.FC<SignInProps> = ({ route }) => {
 
   const handleSignIn = async () => {
     setErrorMessage("")
-    const { email, password } = input
+    const { email, password, rememberLogin } = input
     setLoading(true)
     const validation = validationInput(email, password)
     if (!validation) {
       setLoading(false)
       return
     }
-    const res = await authApi.HandleAuthentication(`/user?email=${input.email}&password=${input.password}`, 'get')
-    if (res && res?.status === 200) {
-      if (input.rememberLogin) {
-        await AsyncStorage.setItem("isLogged", JSON.stringify(res.data.user.password))
+    const res = await authApi.HandleAuthentication('/signIn', 'post', input)
+    console.log("response token: ", res.data.token);
+    if (res && res.status === 201) {
+      if (rememberLogin && res.data.token) {
+        await AsyncStorage.setItem("isLogged", res.data.token)
+
         // dispatch(updateLogger(res.data.user.password))
       }
 

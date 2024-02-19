@@ -9,33 +9,36 @@ import { useEffect, useState } from 'react';
 import { Circle as ProgressCircle } from 'react-native-progress';
 import { primaryColor } from '../../theme';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-
-const listItemIndex: ItemIndexData[] = [
-  { name: 'Popular', imgSource: require('../../assets/icons/star.png') },
-  { name: 'Bed', imgSource: require('../../assets/icons/bed.png') },
-  {
-    name: 'Book Shelves',
-    imgSource: require('../../assets/icons/bookshelves.png'),
-  },
-  { name: 'Bowl', imgSource: require('../../assets/icons/bowl.png') },
-  { name: 'Chair', imgSource: require('../../assets/icons/chair.png') },
-  { name: 'Door', imgSource: require('../../assets/icons/door.png') },
-  { name: 'Gas Stove', imgSource: require('../../assets/icons/gas-stove.png') },
-  { name: 'Lamp', imgSource: require('../../assets/icons/lamp.png') },
-  { name: 'Light', imgSource: require('../../assets/icons/light.png') },
-  { name: 'Sink', imgSource: require('../../assets/icons/sink.png') },
-  { name: 'Sofa', imgSource: require('../../assets/icons/sofa.png') },
-  { name: 'Table', imgSource: require('../../assets/icons/table-work.png') },
-  {
-    name: 'Washer Machine',
-    imgSource: require('../../assets/icons/washer-machine.png'),
-  },
-  { name: 'Window', imgSource: require('../../assets/icons/window-frame.png') },
-];
+import { useDispatch, useSelector } from 'react-redux';
+import { authApi } from '../apis/authApi';
+import { productApi } from '../apis/productApi';
+import { RootState } from '../redux/reducer';
+import { fetchIndexGrocery } from '../redux';
 
 export default function HomeScreen() {
   const [loading, toggleLoading] = useState(true);
   const [selected, setSelected] = useState(0);
+
+  const listIndex = useSelector((state: RootState) => state.indexGrocery)
+
+  const dispatch = useDispatch()
+
+  //fetch index grocery first render component
+  const handleIndexGrocery = async () => {
+
+    try {
+      const res = await productApi.HandleEvent('/index', 'get')
+      dispatch(fetchIndexGrocery([{ name: "All" }, ...res.data]))
+    } catch (err) {
+      console.log("Error fetching index");
+      return
+    }
+
+  }
+  useEffect(() => {
+    handleIndexGrocery()
+  }, [])
+
   useEffect(() => {
     if (loading) {
       setTimeout(() => toggleLoading(false), 500);
@@ -49,14 +52,17 @@ export default function HomeScreen() {
         title={'Find All You Need'}
         leftIcon={<Ionicons name="search" size={30} color={primaryColor} />}
       />
-      <ItemIndexList
-        datas={listItemIndex}
-        selectedIndex={selected}
-        onSelectedChange={index => {
-          toggleLoading(true);
-          setSelected(index);
-        }}
-      />
+      {(listIndex.length > 0) ?
+        < ItemIndexList
+          datas={listIndex}
+          selectedIndex={selected}
+          onSelectedChange={index => {
+            toggleLoading(true);
+            setSelected(index);
+          }}
+        />
+        : null
+      }
 
       {loading ? (
         <ProgressCircle

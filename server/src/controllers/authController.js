@@ -1,5 +1,7 @@
 const UserModel = require("../model/User")
 const bcrypt = require('bcrypt')
+const jwt = require('jsonwebtoken')
+const env = require('dotenv').config()
 
 const register = async (req, res) => {
     try {
@@ -50,7 +52,52 @@ const findUserByEmail = async (req, res) => {
     }
 }
 
+const signIn = async (req, res) => {
+
+    try {
+        const { email, password, rememberLogin } = req.body.data
+        const check = await UserModel.findOne({ email: email })
+        if (check && password) {
+            const result = await bcrypt.compare(password, check.password)
+            console.log("Result check: ", result);
+            if (result && rememberLogin) {
+                const token = jwt.sign({ email: email }, process.env.SECRET_JWT_KEY, { expiresIn: '1d' })
+                res.status(201).json({ message: "Create token successfully", token: token })
+                // if (token) {
+                //     console.log(token);
+                //     const verify = await jwt.verify(token, process.env.SECRET_JWT_KEY)
+                //     console.log("Verify: ", verify);
+
+                // }
+            } else {
+                res.status(400).json({ message: "Error create token" })
+            }
+        }
+
+    } catch (err) {
+        console.log(">>>Error sign in: ", err);
+        return err.response
+
+    }
+
+}
+
+const checkpoint = async (req, res) => {
+    try {
+        const check = jwt.verify(req.body.data.token, process.env.SECRET_JWT_KEY)
+        res.status(200).json({ message: "valid token" })
+
+
+    } catch (err) {
+        console.log(err.message);
+        res.status(400).json({ message: "Token out dated/ error" })
+        return err.response
+    }
+}
+
 module.exports = {
     register,
-    getUserByEmail: findUserByEmail
+    getUserByEmail: findUserByEmail,
+    signIn,
+    checkpoint
 }

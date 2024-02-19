@@ -77,7 +77,6 @@ export default function SignUp() {
         return
       }
     }
-
     const res = await authApi.HandleAuthentication('/register', 'post', input);
     setLoading(false);
     if (res?.status !== 201) setErrorMessage('Unknow error, please try again')

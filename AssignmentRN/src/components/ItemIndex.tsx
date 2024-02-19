@@ -1,7 +1,8 @@
-import {Image, ImageSourcePropType, StyleSheet, Text, View} from 'react-native';
-import {TouchableOpacity} from 'react-native';
+import { Image, ImageSourcePropType, StyleSheet, Text, View } from 'react-native';
+import { TouchableOpacity } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import {primaryColor, secondaryColor} from '../../theme';
+import { primaryColor, secondaryColor } from '../../theme';
+import { parseIndexImage } from '../utils/parseImage';
 
 export type ItemIndexData = {
   name: string;
@@ -14,16 +15,16 @@ type ItemIndexProps = {
   onClick: () => void;
 };
 
-export default function ItemIndex({data, isFocused, onClick}: ItemIndexProps) {
+export default function ItemIndex({ data, isFocused, onClick }: ItemIndexProps) {
   return (
     <TouchableOpacity style={styles.container} onPress={onClick}>
       <View
         style={[
           styles.iconWrapper,
-          {backgroundColor: isFocused ? '#303030' : '#e8faea'},
+          { backgroundColor: isFocused ? '#303030' : '#e8faea' },
         ]}>
         <Image
-          source={data.imgSource}
+          source={parseIndexImage(data.name)}
           style={styles.img}
           tintColor={isFocused ? 'white' : 'black'}
           resizeMode="contain"
@@ -44,7 +45,7 @@ export default function ItemIndex({data, isFocused, onClick}: ItemIndexProps) {
   );
 }
 const styles = StyleSheet.create({
-  container: {alignItems: 'center', height: 100, width: 70},
+  container: { alignItems: 'center', height: 100, width: 70 },
   iconWrapper: {
     width: 60,
     height: 60,

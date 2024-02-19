@@ -5,6 +5,7 @@ export const updateLogger = (value: string) => {
     })
 }
 
-export const logSomeThingElse = () => ({
-    type: "ResetLogger"
+export const fetchIndexGrocery = (value: string[]) => ({
+    type: "Fetch Index",
+    payload: value
 })

@@ -63,12 +63,6 @@ const signIn = async (req, res) => {
             if (result && rememberLogin) {
                 const token = jwt.sign({ email: email }, process.env.SECRET_JWT_KEY, { expiresIn: '1d' })
                 res.status(201).json({ message: "Create token successfully", token: token })
-                // if (token) {
-                //     console.log(token);
-                //     const verify = await jwt.verify(token, process.env.SECRET_JWT_KEY)
-                //     console.log("Verify: ", verify);
-
-                // }
             } else {
                 res.status(400).json({ message: "Error create token" })
             }

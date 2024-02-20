@@ -1,7 +1,7 @@
-import {FlatList, ImageSourcePropType, StyleSheet, View} from 'react-native';
-import ItemIndex, {ItemIndexData} from './ItemIndex';
-import {useState} from 'react';
-import {primaryColor} from '../../theme';
+import { FlatList, ImageSourcePropType, StyleSheet, View } from 'react-native';
+import ItemIndex, { ItemIndexData } from './ItemIndex';
+import { useState } from 'react';
+import { primaryColor } from '../../theme';
 
 type ItemIndexListProps = {
   datas: ItemIndexData[];
@@ -23,7 +23,7 @@ export default function ItemIndexList({
     <View style={styles.container}>
       <FlatList
         data={datas}
-        renderItem={({item, index}) =>
+        renderItem={({ item, index }) =>
           renderItem(item, index == selectedIndex, () => {
             onSelectedChange(index);
           })

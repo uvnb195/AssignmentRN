@@ -1,3 +1,8 @@
 export { store } from "./store";
 
-export { updateLogger, fetchIndexGrocery } from "./actions"
+export {
+    updateLogger,
+    fetchIndexGrocery,
+    updateSelected,
+    updateItems
+} from "./actions"

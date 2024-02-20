@@ -14,6 +14,7 @@ class AuthApi {
 
                 return err.response
             })
+
             return res
         } catch (error) {
             console.log('>>>Error', error);

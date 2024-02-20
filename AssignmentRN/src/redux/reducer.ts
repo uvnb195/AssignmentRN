@@ -3,6 +3,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 const iniState = {
     passwordHash: "",
     indexGrocery: [],
+    selectedIndex: 0,
+    items: []
 }
 
 const rootReducer = (state = iniState, action: any) => {
@@ -22,6 +24,20 @@ const rootReducer = (state = iniState, action: any) => {
                 indexGrocery: action.payload
             }
 
+        }
+
+        case "Update Selected": {
+            return {
+                ...state,
+                selectedIndex: action.payload
+            }
+        }
+
+        case "Update Items": {
+            return {
+                ...state,
+                items: action.payload
+            }
         }
 
         default: {

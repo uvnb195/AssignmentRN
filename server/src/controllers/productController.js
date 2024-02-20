@@ -96,9 +96,45 @@ const addItem = async (req, res) => {
     }
 }
 
+const getProducts = async (req, res) => {
+    let type;
+    try {
+        type = req.body.data.type
+        if (type) {
+            const getType = await GroceryIndexModel.findOne({ name: type }).then(response => response._id)
+            const response = await GroceryItemModel.find({ index: getType }).populate('index')
+
+            res.status(200).json({ message: "Ok", response: response })
+        } else {
+            res.status(400).json({ message: "Syntax Error" })
+        }
+
+    } catch (err) {
+        if (!type) {
+            try {
+                const response = await GroceryItemModel.find().populate('index')
+                //shuffle array
+                const shuffle = response.map((origin) => ({ sort: Math.random(), value: origin }))
+                    .sort((a, b) => a.sort - b.sort)
+                    .map((newFlow) => newFlow.value);
+
+
+                res.status(200).json({ message: "Notype Ok", response: shuffle })
+
+            } catch (err) {
+                res.status(400).json({ message: " Notype Syntax Error" })
+            }
+        } else {
+            console.log(">>>Error getting products");
+            res.status(400).json({ message: ">>>Error getting products" })
+        }
+    }
+}
+
 module.exports = {
     addToDb,
     getGroceryIndex,
     addItem,
-    getGroceryItem
+    getGroceryItem,
+    getProducts
 }

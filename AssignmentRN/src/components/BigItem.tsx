@@ -1,27 +1,41 @@
-import {CSSProperties} from 'react';
-import {Image, StyleSheet, Text, View, ViewStyle} from 'react-native';
-import {TouchableOpacity} from 'react-native';
+import { CSSProperties } from 'react';
+import { Image, StyleSheet, Text, View, ViewStyle } from 'react-native';
+import { TouchableOpacity } from 'react-native';
+import { parseSampleItemImage } from '../utils/parseImage';
 
-export default function BigItem({title}: {title: string}) {
+export type BigItemProps = {
+  name: string,
+  quantity: number,
+  price: number,
+  type: string
+}
+
+export default function BigItem(
+  props: BigItemProps
+) {
+  const { name, quantity, price, type } = props
+
   return (
     <TouchableOpacity style={styles.container}>
       <View style={styles.imgContainer}>
         <Image
-          source={require('../../assets/images/dummy.webp')}
+          source={parseSampleItemImage(type)}
           resizeMode="cover"
           style={styles.img}
         />
       </View>
-      <Text style={styles.text}>Black Simple Lamp</Text>
-      <Text style={styles.price}>$ 12.00</Text>
+      <Text style={styles.text}>{name}</Text>
+      <Text style={styles.price}>{price} VNĐ</Text>
+      <Text style={styles.text}>Quantity: {quantity}</Text>
     </TouchableOpacity>
   );
 }
 const styles = StyleSheet.create({
   container: {
+    width: "50%",
     alignContent: 'center',
-    padding: 20,
-    rowGap: 8,
+    padding: 5,
+    rowGap: 4,
   },
   imgContainer: {
     width: '100%',

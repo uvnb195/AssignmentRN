@@ -9,3 +9,16 @@ export const fetchIndexGrocery = (value: string[]) => ({
     type: "Fetch Index",
     payload: value
 })
+
+export const updateSelected = (value: number) => ({
+    type: "Update Selected",
+    payload: value
+})
+
+export const updateItems = (values: any[]) => {
+
+    return ({
+        type: "Update Items",
+        payload: values
+    })
+}

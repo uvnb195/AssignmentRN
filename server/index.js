@@ -4,8 +4,8 @@ const cors = require('cors')
 const app = express()
 
 const connectDb = require('./src/configs/connectDb');
-const { register, getUserByEmail, signIn, checkpoint } = require('./src/controllers/authController');
-const { addToDb, getGroceryIndex, addItem, getGroceryItem, getProducts } = require('./src/controllers/productController');
+const { register, getUserByEmail, signIn, handleCheckpoint } = require('./src/controllers/authController');
+const { addToDb, getGroceryIndex, addItem, getGroceryItem, getProducts, findStorage, addFavorites, removeFavourite } = require('./src/controllers/productController');
 // const UserModel = require('./src/model/User');
 connectDb();
 
@@ -28,8 +28,11 @@ app.get('/index', getGroceryIndex)
 app.get('/add', addItem)
 app.get('/item', getGroceryItem)
 app.post('/signIn', signIn)
-app.post('/checkpoint', checkpoint)
+app.post('/checkpoint', handleCheckpoint)
 app.post('/products', getProducts)
+app.get('/storage', findStorage)
+app.post('/favourites', addFavorites)
+app.post('/favourites/remove', removeFavourite)
 
 app.listen(PORT, (error) => {
     if (error) {

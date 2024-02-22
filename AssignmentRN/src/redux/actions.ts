@@ -22,3 +22,31 @@ export const updateItems = (values: any[]) => {
         payload: values
     })
 }
+
+export const updateFavourites = (value: any[]) => {
+    return ({
+        type: "Update Favourites",
+        payload: value
+    })
+}
+
+export const addFavourite = (value: any) => {
+    return ({
+        type: "Add Favourite",
+        payload: value
+    })
+}
+
+export const updateLoading = (value: boolean) => {
+    return ({
+        type: "Loading",
+        payload: value
+    })
+}
+
+export const removeFavourite = (value: any) => {
+    return ({
+        type: "Remove Favourite",
+        payload: value
+    })
+}

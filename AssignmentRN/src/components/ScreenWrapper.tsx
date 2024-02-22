@@ -6,6 +6,9 @@ import {
   View,
   ViewStyle,
 } from 'react-native';
+import LoadingComponent from './LoadingComponent';
+import { useSelector } from 'react-redux';
+import { RootState } from '../redux/reducer';
 
 type ScreenWrapperProps = {
   style?: ViewStyle;
@@ -13,9 +16,13 @@ type ScreenWrapperProps = {
 };
 
 const ScreenWrapper: React.FC<ScreenWrapperProps> = ({ children, style }) => {
+
+  const loadingState = useSelector((state: RootState) => state.loading)
   return (
     <View style={{ flex: 1, backgroundColor: 'white' }}>
       <SafeAreaView style={[styles.container, style]}>{children}</SafeAreaView>
+
+      <LoadingComponent visible={loadingState} />
     </View>
   );
 };

@@ -9,15 +9,14 @@ import HomeRoutes from './src/routes/HomeRoutes';
 import Settings from './src/screens/Settings';
 import MyList from './src/screens/MyList';
 import CreateList from './src/screens/CreateList';
-import { Provider } from 'react-redux';
+import { Provider, useSelector } from 'react-redux';
 import { store } from './src/redux';
 import StartRoutes from './src/routes/StartRoutes';
-import MainRoutes from './src/routes/MainRoutes';
 
 export default function App() {
+
   return (
     <Provider store={store}>
-
       <NavigationContainer>
         <StatusBar
           translucent

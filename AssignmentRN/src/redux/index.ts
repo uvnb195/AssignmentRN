@@ -4,5 +4,9 @@ export {
     updateLogger,
     fetchIndexGrocery,
     updateSelected,
-    updateItems
+    updateItems,
+    updateFavourites,
+    addFavourite,
+    updateLoading,
+    removeFavourite
 } from "./actions"

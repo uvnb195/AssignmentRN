@@ -1,7 +1,6 @@
 import { FlatList, StyleSheet } from 'react-native';
 import ScreenWrapper from '../components/ScreenWrapper';
 import HomeActionBar, { arrowLeftIcon } from '../components/HomeActionBar';
-import { renderItem } from './BookMark';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { styles as homeStyles } from '../screens/Home';
@@ -17,13 +16,13 @@ export default function MyList() {
         leftIcon={arrowLeftIcon}
         onLeftClick={() => navigation.pop()}
       />
-      <FlatList
+      {/* <FlatList
         style={{ width: '100%' }}
         data={list}
         renderItem={({ item, index }) =>
           renderItem(index == list.length - 1, 'trash-outline')
         }
-      />
+      /> */}
     </ScreenWrapper>
   );
 }

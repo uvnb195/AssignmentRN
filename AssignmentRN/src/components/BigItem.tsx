@@ -7,19 +7,20 @@ export type BigItemProps = {
   name: string,
   quantity: number,
   price: number,
-  type: string
+  type: string,
+  onClick: () => void
 }
 
 export default function BigItem(
   props: BigItemProps
 ) {
-  const { name, quantity, price, type } = props
+  const { name, quantity, price, type, onClick } = props
 
   return (
-    <TouchableOpacity style={styles.container}>
+    <TouchableOpacity style={styles.container} onPress={onClick}>
       <View style={styles.imgContainer}>
         <Image
-          source={parseSampleItemImage(type)}
+          source={parseSampleItemImage(name)}
           resizeMode="cover"
           style={styles.img}
         />

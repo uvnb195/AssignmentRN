@@ -40,20 +40,19 @@ export const parseIndexImage = (value: string) => {
 }
 
 export const parseSampleItemImage = (value: string) => {
-    const check = Index.find(e => e.includes(value))
-    switch (check) {
-        case "Table": return require(`../../assets/images/sampleimage/table.jpg`)
-        case "Chair": return require(`../../assets/images/sampleimage/chair.jpg`)
-        case "Bookshelf": return require(`../../assets/images/sampleimage/bookshelf.jpg`)
-        case "Bed": return require(`../../assets/images/sampleimage/bed.jpg`)
-        case "Lamp": return require(`../../assets/images/sampleimage/lamp.jpg`)
-        case "Wardrobe": return require(`../../assets/images/sampleimage/wardrobe.jpg`)
-        case "Shelf": return require(`../../assets/images/sampleimage/shelf.jpg`)
-        case "Dressing Table": return require(`../../assets/images/sampleimage/dressing-table.jpg`)
-        case "Refrigerator": return require(`../../assets/images/sampleimage/refrigerator.jpg`)
-        case "Stove": return require(`../../assets/images/sampleimage/stove.jpg`)
-        case "Shoe Cabinet": return require(`../../assets/images/sampleimage/shoe-cabinet.jpg`)
-        case "Sofa": return require(`../../assets/images/sampleimage/sofa.jpg`)
+    switch (true) {
+        case `${value}`.includes("Table"): return require(`../../assets/images/sampleimage/table.jpg`)
+        case `${value}`.includes("Chair"): return require(`../../assets/images/sampleimage/chair.jpg`)
+        case `${value}`.includes("Bookshelf"): return require(`../../assets/images/sampleimage/bookshelf.jpg`)
+        case `${value}`.includes("Bed"): return require(`../../assets/images/sampleimage/bed.jpg`)
+        case `${value}`.includes("Lamp"): return require(`../../assets/images/sampleimage/lamp.jpg`)
+        case `${value}`.includes("Wardrobe"): return require(`../../assets/images/sampleimage/wardrobe.jpg`)
+        case `${value}`.includes("Shelf"): return require(`../../assets/images/sampleimage/shelf.jpg`)
+        case `${value}`.includes("Dressing Table"): return require(`../../assets/images/sampleimage/dressing-table.jpg`)
+        case `${value}`.includes("Refrigerator"): return require(`../../assets/images/sampleimage/refrigerator.jpg`)
+        case `${value}`.includes("Stove"): return require(`../../assets/images/sampleimage/stove.jpg`)
+        case `${value}`.includes("Shoe Cabinet"): return require(`../../assets/images/sampleimage/shoe-cabinet.jpg`)
+        case `${value}`.includes("Sofa"): return require(`../../assets/images/sampleimage/sofa.jpg`)
         default:
             return require('../../assets/images/dummy.webp')
     }

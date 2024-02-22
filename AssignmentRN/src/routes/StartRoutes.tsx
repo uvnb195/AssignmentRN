@@ -25,8 +25,8 @@ const StartRoutes = () => {
             <Stack.Screen name="WelcomeRoutes" component={WelcomeRoutes} />
             <Stack.Screen name="MainRoutes" component={MainRoutes} />
         </Stack.Navigator >
-        // {/* <CreateList /> */ }
 
+        /* <CreateList /> */
     )
 }
 export default StartRoutes;

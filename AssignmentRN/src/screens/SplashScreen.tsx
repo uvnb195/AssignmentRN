@@ -10,27 +10,30 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../redux/reducer";
 import { authApi } from "../apis/authApi";
+import { checkSignToken } from "../utils/callAsyncStorage";
+import { storageApi } from "../apis/storageApi";
+import { updateFavourites } from "../redux";
 const height = Dimensions.get("window").height;
 
 const SplashScreen = () => {
     const navigation = useNavigation<NativeStackNavigationProp<StartRoutesStackParams>>()
-
+    const dispatch = useDispatch()
     useEffect(() => {
         isLogged()
     }, [])
 
     const isLogged = async () => {
-        const isLogged = await AsyncStorage.getItem('isLogged')
-        if (!isLogged) navigation.replace("WelcomeRoutes")
+        const token = await checkSignToken()
+        if (!token) navigation.replace("WelcomeRoutes")
         else {
-            const res = await authApi.CheckTokenExp(isLogged)
-            if (res?.status != 200) {
-                await AsyncStorage.removeItem("isLogged")
-                navigation.replace("WelcomeRoutes")
-            }
-            else {
-                navigation.replace("MainRoutes")
-            }
+            const call = await storageApi.handleData(`/storage?token=${token}`, 'get')
+            const favourites = call?.data.response
+            // if (favourites && favourites.length > 0) {
+
+            //     dispatch(updateFavourites([...favourites]))
+            // }
+
+            navigation.replace("MainRoutes")
         }
     }
 

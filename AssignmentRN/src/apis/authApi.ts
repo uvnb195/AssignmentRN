@@ -1,6 +1,5 @@
 import { err } from "react-native-svg"
 import { instance as authInstance } from "./axiosClient"
-import { AxiosError } from "axios"
 
 export type RequestMethod = 'get' | 'post' | 'put' | 'delete'
 
@@ -23,8 +22,8 @@ class AuthApi {
     CheckTokenExp = async (token: string) => {
         try {
             const res = await authInstance.post('/checkpoint', {
-                data: { token: token }
-            }).catch(err => err.response)
+                data: token
+            })
             return res
         } catch (err) {
             console.log(">>>Error: ", err);

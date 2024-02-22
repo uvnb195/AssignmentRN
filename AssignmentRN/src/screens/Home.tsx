@@ -13,7 +13,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { authApi } from '../apis/authApi';
 import { productApi } from '../apis/productApi';
 import { RootState } from '../redux/reducer';
-import { fetchIndexGrocery, updateItems, updateSelected } from '../redux';
+import { addFavourite, fetchIndexGrocery, updateFavourites, updateItems, updateLoading, updateSelected } from '../redux';
+import { checkSignToken } from '../utils/callAsyncStorage';
 
 export type ItemIndex =
   "Table" |
@@ -40,6 +41,19 @@ export default function HomeScreen() {
 
   const dispatch = useDispatch()
 
+  // add only 1 new favourite
+  const handleUpdateFavourites = async (item: any) => {
+    const isLogged = await checkSignToken()
+    if (!isLogged) return
+    const res = await productApi.HandleEvent('/favourites', 'post', { token: isLogged, item: item })
+
+    if (res.status === 201) {
+      dispatch(addFavourite(item))
+    }
+    dispatch(updateLoading(false))
+    return
+  }
+
   //fetch index grocery first render component
   const handleIndexGrocery = async () => {
     toggleLoading(true);
@@ -52,6 +66,7 @@ export default function HomeScreen() {
     toggleLoading(false);
   }
   useEffect(() => {
+    // dispatch(updateFavourites([]))
     handleIndexGrocery()
   }, [])
 
@@ -78,7 +93,14 @@ export default function HomeScreen() {
 
   const renderBigItem = (item: any) => {
     const { id, name, price, quantity, index: { name: indexName } } = item
-    return <BigItem key={id} price={price} quantity={quantity} name={name} type={indexName} />
+    return <BigItem
+      key={id} price={price}
+      quantity={quantity}
+      name={name}
+      type={indexName}
+      onClick={() => {
+        handleUpdateFavourites(item)
+      }} />
   }
 
   return (

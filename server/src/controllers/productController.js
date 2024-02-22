@@ -1,6 +1,10 @@
 const { ObjectId } = require("mongodb");
 const GroceryIndexModel = require("../model/GroceryIndex")
-const GroceryItemModel = require("../model/GroceryItem")
+const GroceryItemModel = require("../model/GroceryItem");
+const StorageModel = require("../model/CloudStorage");
+const { checkpoint } = require("./authController");
+const { Schema, default: mongoose } = require("mongoose");
+const { find } = require("../model/User");
 
 const sampleIndex = {
     "interiorItems": [
@@ -131,10 +135,117 @@ const getProducts = async (req, res) => {
     }
 }
 
+const findStorage = async (req, res) => {
+    try {
+        const { token } = req.query
+        const result = await checkpoint(token)
+        const { id } = result
+        const findExistsStorage = await StorageModel.findOne({ uid: new ObjectId(`${id}`) })
+
+        if (!findExistsStorage || findExistsStorage == null) {
+            await StorageModel.create({
+                uid: new ObjectId(`${id}`),
+                $set: {
+                    favourites: []
+                }
+            })
+            return res.send({ status: 200, message: "create storage successfully", response: [] })
+        }
+        let arr = findExistsStorage?.favourites || []
+
+        let convertArr = []
+        for (let item of arr) {
+
+            const getItem = await GroceryItemModel.findOne({ _id: new ObjectId(`${item.itemId}`) })
+            convertArr = [...convertArr, getItem]
+        }
+        return res.send({ status: 200, response: convertArr })
+    } catch (err) {
+        return res.send({ status: 500, message: "Server error" })
+    }
+}
+const addFavorites = async (req, res) => {
+    try {
+        const { token, item } = req.body.data
+        const check = await checkpoint(token)
+
+        if (!check || check == false)
+            return res.send({ status: 400, message: "Token error" })
+        const { id } = check
+        if (!id || id.length < 24) {
+            return res.send({ status: 400, message: "Token error" })
+        }
+        const storage = await StorageModel.findOne({ uid: new ObjectId(`${id}`) }).populate('favourites.itemId').then(data => data.favourites)
+        if (!storage) {
+            await StorageModel.create({
+                uid: new ObjectId(`${check.id}`),
+                favourites: favouritesArr
+            }
+            )
+            return res.send({ status: 201, message: "Create new storage Successfully", })
+        }
+
+        if (!item || item == null) {
+            return res.send({ status: 201, message: "Nothing to update", })
+        }
+        await StorageModel.updateOne({ uid: new ObjectId(`${check.id}`) },
+            {
+                $push: {
+                    favourites: {
+                        itemId: new ObjectId(`${item._id}`),
+                        createAt: Date.now()
+                    }
+                }
+            })
+        return res.send({ status: 201, message: "Updated Favourites Successfully" })
+
+    } catch (err) {
+        console.log("Error update favourites");
+        return res.send({
+            status: 500, message: "Faild update favorites"
+        })
+    }
+}
+
+const removeFavourite = async (req, res) => {
+    try {
+        const { token, itemId } = req.body.data
+        if (!token) {
+            return res.send({ status: 400 })
+        }
+        const isSignIn = await checkpoint(token)
+
+        if (!isSignIn || isSignIn == false) {
+            return res.send({ status: 404, message: "Token out of dated." })
+        }
+        const findStorage = await StorageModel.find({ uid: new ObjectId(`${isSignIn.id}`) })
+        if (!findStorage) {
+            return res.send({ status: 400 })
+        }
+        await StorageModel.updateOne(
+            { uid: new ObjectId(`${isSignIn.id}`) },
+            {
+                $pull: {
+                    favourites: {
+                        itemId: itemId
+                    }
+                }
+            }
+        )
+
+        return res.send({ status: 200, message: "Remove favourite successfully" })
+    } catch (err) {
+        return res.send({ status: 500 })
+    }
+}
+
 module.exports = {
     addToDb,
     getGroceryIndex,
     addItem,
     getGroceryItem,
-    getProducts
+    getProducts,
+    findStorage,
+    addFavorites,
+    removeFavourite,
 }

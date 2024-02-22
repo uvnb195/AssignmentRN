@@ -1,10 +1,15 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { act } from "react-test-renderer";
+import { favourites } from "../constants";
+import { stat } from "react-native-fs";
 
 const iniState = {
     passwordHash: "",
     indexGrocery: [],
     selectedIndex: 0,
-    items: []
+    items: [],
+    favourites: [],
+    loading: false
 }
 
 const rootReducer = (state = iniState, action: any) => {
@@ -39,6 +44,30 @@ const rootReducer = (state = iniState, action: any) => {
                 items: action.payload
             }
         }
+
+        case "Update Favourites":
+            return {
+                ...state,
+                favourites: [...action.payload]
+            }
+
+        case "Add Favourite":
+            return {
+                ...state,
+                favourites: [...state.favourites, action.payload]
+            }
+
+        case "Remove Favourite":
+            return {
+                ...state,
+                favourites: state.favourites.filter((item: any) => item._id != action.payload)
+            }
+
+        case "Loading":
+            return {
+                ...state,
+                loading: action.payload
+            }
 
         default: {
             return state

@@ -21,7 +21,12 @@ const register = async (req, res) => {
             email: email,
             password: hashPassword
         })
-        res.status(201).json({ message: "User created successfully", user: newUser })
+        if (newUser) {
+
+            res.status(201).json({ message: "User created successfully", user: newUser })
+        } else {
+            res.status(500).json({ message: "Failed to create new user" })
+        }
     } catch (error) {
         res.status(500).json({ message: "Failed to create new user", error: error.message })
     }
@@ -61,7 +66,7 @@ const signIn = async (req, res) => {
             const result = await bcrypt.compare(password, check.password)
             console.log("Result check: ", result);
             if (result && rememberLogin) {
-                const token = jwt.sign({ email: email }, process.env.SECRET_JWT_KEY, { expiresIn: '1d' })
+                const token = jwt.sign({ id: check.id }, process.env.SECRET_JWT_KEY, { expiresIn: '1d' })
                 res.status(201).json({ message: "Create token successfully", token: token })
             } else {
                 res.status(400).json({ message: "Error create token" })
@@ -76,12 +81,24 @@ const signIn = async (req, res) => {
 
 }
 
-const checkpoint = async (req, res) => {
+const checkpoint = async (token) => {
     try {
-        const check = jwt.verify(req.body.data.token, process.env.SECRET_JWT_KEY)
+        const check = jwt.verify(token, process.env.SECRET_JWT_KEY)
+        return check
+    } catch (err) {
+        return false
+    }
+}
+
+const handleCheckpoint = async (req, res) => {
+    try {
+        const token = req.body.data
+        const check = await checkpoint(token)
+        if (!check || check == false)
+            res.status(404).json({ message: "Token error" })
+        console.log("Valid token");
+
         res.status(200).json({ message: "valid token" })
-
-
     } catch (err) {
         console.log(err.message);
         res.status(400).json({ message: "Token out dated/ error" })
@@ -93,5 +110,6 @@ module.exports = {
     register,
     getUserByEmail: findUserByEmail,
     signIn,
+    handleCheckpoint,
     checkpoint
 }

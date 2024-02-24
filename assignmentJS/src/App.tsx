@@ -11,6 +11,16 @@ import ListSection from './components/ListSection';
 
 export type DifficultType = "Easy" | "Medium" | "Hard"
 
+
+export const returnType = (value: DifficultType) => {
+  switch (value) {
+    case "Easy": return "bg-safe-bg"
+    case "Medium": return "bg-warning-bg"
+    case "Hard": return "bg-danger-bg"
+    default: return "bg-slate-900"
+  }
+}
+
 export default function App() {
   const dropDownList: DifficultType[] = [
     "Easy",
@@ -23,11 +33,11 @@ export default function App() {
   const bg = useSelector((state: RootState) => state.bgColor)
 
   return (
-    <body className={`${bg} bg-opacity-70 flex p-3.5
+    <body className={`${returnType(bg)} bg-opacity-70 flex p-3.5
         transition-colors transform duration-500 ease-in-out`} >
       <div className={`flex flex-col 
       w-mainWidth
-       min-h-max shadow-black bg-slate-100 ${bg != "" ? "shadow-lg" : "shadow-md"}
+       min-h-max shadow-black bg-slate-300 ${bg != "" ? "shadow-lg" : "shadow-md"}
         gap-2 rounded-md p-6 `}>
         <h1 className=' w-full text-center text-3xl' >Todo List</h1>
 

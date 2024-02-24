@@ -20,7 +20,38 @@ const getTodos = async (_req, res) => {
     }
 }
 
+const deleteTodo = async (req, res) => {
+    try {
+        const { id } = req.query
+
+        await TodoModel.findByIdAndDelete(id)
+        return res.send({ status: 201 })
+    } catch (err) {
+        return res.send({ status: 404 })
+    }
+}
+
+const updateTodo = async (req, res) => {
+    try {
+        console.log("Req:", req.body.data);
+
+        const { difficult, title, desc, isDone, createAt, _id } = req.body.data
+        console.log("Title:", title);
+        console.log("ID:", _id);
+
+        const setNew = await TodoModel.findByIdAndUpdate(_id, { difficult: difficult, title: title, desc: desc, isDone: isDone, createAt: createAt })
+        console.log("New item:", setNew);
+
+        return res.send({ status: 201 })
+
+    } catch (err) {
+        return res.send({ status: 404 })
+    }
+}
+
 module.exports = {
     addTodo,
-    getTodos
+    getTodos,
+    deleteTodo,
+    updateTodo,
 }

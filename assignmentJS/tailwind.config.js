@@ -6,8 +6,12 @@ export default {
   ],
   theme: {
     extend: {
+      backgroundImage: {
+        'passed-bg': "url('./src/assets/passed.png')"
+      },
       width: {
-        mainWidth: '490px'
+        mainWidth: '700px',
+        triangleSize: '100px'
       },
       colors: {
         primary: '#aad8ff',

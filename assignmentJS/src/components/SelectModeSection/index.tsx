@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { DifficultType } from "../../App";
+import { DifficultType, returnType } from "../../App";
 import { useDispatch, useSelector } from "react-redux";
 import { changeBackground } from "../../redux/action";
 import { RootState } from "../../redux/reducer";
@@ -21,42 +21,34 @@ const SelectModeSection = (props: SelectModeSectionProps) => {
     }, [selected])
 
     const dispatchUseCallBack = useCallback((value: DifficultType) => {
-        const type = returnType(value)
-        dispatch(changeBackground(type))
+        dispatch(changeBackground(value))
     }, [selected])
 
-    const returnType = (value: DifficultType) => {
-        switch (value) {
-            case "Easy": return "bg-safe-bg"
-            case "Medium": return "bg-warning-bg"
-            case "Hard": return "bg-danger-bg"
-            default: return ""
-        }
-    }
-
     useEffect(() => {
-        if (backgroundState == "") {
+        if (!backgroundState || backgroundState == "") {
             setSelected(null)
+        } else {
+            setSelected(backgroundState)
         }
     }, [backgroundState])
     return (
         <div className="grid grid-cols-3 p-1 gap-4">
-            <button className={`hover:border-gray-500 shadow-md
-            col-span-1  border-2 ${selected == "Easy" ? "bg-safe" : "hover:bg-primary hover:bg-opacity-5"}
+            <button className={` shadow-md
+            col-span-1  border-2 ${selected == "Easy" ? "bg-safe hover:border-white" : "hover:border-gray-500 bg-primary bg-opacity-5 hover:bg-opacity-75 hover:bg-white"}
             text-2xl p-1 rounded-md hover:scale-110
             transition-colors duration-500 transform ease-in-out
             `}
                 onClick={() => {
                     setSelected("Easy")
                 }}>Easy</button>
-            <button className={`hover:border-gray-500 shadow-md
-            col-span-1  border-2 ${selected == "Medium" ? "bg-warning" : "hover:bg-primary hover:bg-opacity-5"} text-2xl p-1 rounded-md hover:scale-110
+            <button className={`shadow-md
+            col-span-1  border-2 ${selected == "Medium" ? "bg-warning hover:border-white" : "hover:border-gray-500 bg-primary bg-opacity-5 hover:bg-opacity-75 hover:bg-white"} text-2xl p-1 rounded-md hover:scale-110
             transition-colors duration-500 transform ease-in-out`}
                 onClick={() => {
                     setSelected("Medium")
                 }}>Medium</button>
-            <button className={`hover:border-gray-500 shadow-md
-            col-span-1  border-2 ${selected == "Hard" ? "bg-danger" : "hover:bg-primary hover:bg-opacity-5"} text-2xl p-1 rounded-md hover:scale-110
+            <button className={`shadow-md
+            col-span-1  border-2 ${selected == "Hard" ? "bg-danger hover:border-white" : "hover:border-gray-500 bg-primary bg-opacity-5 bg-hover:bg-opacity-75 hover:bg-white"} text-2xl p-1 rounded-md hover:scale-110
             transition-colors duration-500 transform ease-in-out`}
                 onClick={() => {
                     setSelected("Hard")

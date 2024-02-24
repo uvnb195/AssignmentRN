@@ -1,10 +1,14 @@
 import { useEffect, useState } from "react"
 import SelectModeSection from "../SelectModeSection"
 import { IoCheckmark, IoCloseOutline } from "react-icons/io5"
-import { useDispatch } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { changeBackground } from "../../redux"
 import { PiWarningBold } from "react-icons/pi";
 import { api } from "../../api/client"
+import { addTodo, fetchItem, removeTodo } from "../../redux/action"
+import { RootState } from "../../redux/reducer"
+import { returnType } from "../../App"
+import { BiEditAlt } from "react-icons/bi"
 
 const InputSection = () => {
     const dispatch = useDispatch()
@@ -19,7 +23,23 @@ const InputSection = () => {
     const [showError, setShowError] = useState(false)
     const [errorMessage, setErrorMessage] = useState<{ type: string, message: string } | null>(null)
 
+    const editItem = useSelector((state: RootState) => state.editItem)
+
     useEffect(() => {
+        if (editItem) {
+            const state = {
+                title: editItem?.title || "",
+                desc: editItem?.desc || "",
+                difficult: editItem?.difficult || ""
+            }
+            handleInput(state)
+            dispatch(changeBackground(state.difficult))
+        }
+    }, [editItem])
+
+    useEffect(() => {
+        setShowError(false)
+        setErrorMessage(null)
         setEnableClear(isAnyFill());
         setEnableSubmit(!isAnyBlank())
     }, [input])
@@ -37,11 +57,11 @@ const InputSection = () => {
 
     const validationInput = () => {
         const { title, desc } = input
-        if (title.length < 5) {
+        if (title.length < 3) {
             setErrorMessage({ type: "Title", message: "Title is too short" })
             return false
         }
-        if (desc.length < 10) {
+        if (desc.length < 3) {
             setErrorMessage({ type: "Desc", message: "Description is too short" })
             return false
         }
@@ -52,6 +72,10 @@ const InputSection = () => {
     const handleClear = () => {
         setShowError(false);
         setErrorMessage(null)
+        if (editItem) {
+            dispatch(addTodo(editItem))
+            dispatch(fetchItem({}))
+        }
         dispatch(changeBackground(""))
         handleInput(initState)
     }
@@ -60,13 +84,34 @@ const InputSection = () => {
         setShowError(true);
         const validation = validationInput()
         if (validation) {
-            console.log("Last check input:", input);
+            let convertInput = {}
+            if (editItem) {
+                convertInput = ({
+                    ...editItem,
+                    title: input.title,
+                    desc: input.desc,
+                    difficult: input.difficult,
+                    isDone: false,
+                    createAt: Date.now()
+                })
+                await api.HandleRequest('/todo/item', 'post',
+                    {
+                        ...editItem,
+                        title: input.title,
+                        desc: input.desc,
+                        difficult: input.difficult,
+                        isDone: false
+                    })
+                dispatch(addTodo(convertInput))
+            } else {
+                convertInput = ({ ...input, createAt: Date.now() })
+                await api.HandleRequest('/todo/add', 'put', convertInput)
+                dispatch(addTodo(convertInput))
+            }
 
-            setShowError(false)
             dispatch(changeBackground(""))
             handleInput(initState)
-            const res = await api.HandleRequest('/todo/add', 'put', { ...input })
-            console.log(res);
+            setShowError(false)
             // add animation success
         }
     }
@@ -75,8 +120,10 @@ const InputSection = () => {
         <>
             <SelectModeSection onChange={(value) => { handleInput((prevState) => ({ ...prevState, difficult: value })) }} />
             <input className={`py-2 px-4 rounded-md border-2 font-bold text-lg
-                hover:scale-105 hover:border-2 border-slate-700 hover:bg-primary hover:bg-opacity-5
-                ${showError && errorMessage?.type == "Title" ? "border-error" : ""}
+                focus:outline-none
+                hover:scale-105  bg-primary bg-opacity-5
+                hover:bg-opacity-75 hover:bg-white
+                ${showError && errorMessage?.type == "Title" ? "border-error" : "border-slate-700"}
                 `}
                 placeholder="Title"
                 value={input.title}
@@ -84,8 +131,10 @@ const InputSection = () => {
                 }
             />
             <textarea className={`py-2 px-4 rounded-md border-2 resize-none
-                hover:scale-105 hover:border-2 border-slate-700 hover:bg-primary hover:bg-opacity-5
-                ${showError && errorMessage?.type == "Desc" ? "border-error" : ""}
+                focus:outline-none
+                hover:scale-105 hover:border-2 bg-primary bg-opacity-5
+                hover:bg-opacity-75 hover:bg-white
+                ${showError && errorMessage?.type == "Desc" ? "border-error" : "border-slate-700"}
                 `} placeholder="Description" rows={4} cols={50}
                 value={input.desc}
                 onChange={(v) => handleInput((prevState) => ({ ...prevState, desc: v.target.value }))} />

@@ -1,33 +1,37 @@
 import { useEffect, useState } from "react";
 import { api } from "../../api/client";
 import ListItem from "./ListItem";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../../redux/reducer";
+import { fetchTodo } from "../../redux/action";
 
 const ListSection = () => {
+    const dispatch = useDispatch()
+    const todoList = useSelector((state: RootState) => state.listTodo)
 
-    const [datas, setDatas] = useState<any[] | null>(null)
     const fetchList = async () => {
         const res = await api.HandleRequest('/todo', 'get');
         console.log(res);
         if (res.status == 200) {
-            console.log(res.data.length);
-            setDatas(res.data)
+            dispatch(fetchTodo(res.data))
         }
     }
 
     useEffect(() => {
-        console.log("Render list");
-
         fetchList()
     }, [])
 
     useEffect(() => {
-        console.log(datas);
+        console.log("List:", todoList);
+    }, [todoList])
 
-    }, [datas])
+    const rvsArr = todoList && todoList.length > 0 ? [...todoList].reverse() : []
 
-    const renderList = datas && datas.length > 0
-        ? datas
-            .map((item: any) => <ListItem key={item._id} data={item} />)
+    const renderList = todoList && todoList.length > 0
+        ? rvsArr
+            .map((item: any) => {
+                return (<ListItem key={item._id} data={item} />)
+            })
         : null
 
     return (

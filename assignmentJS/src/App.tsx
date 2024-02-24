@@ -1,35 +1,40 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import { useEffect, useState } from 'react';
 import './App.css'
+import { IoIosArrowUp } from "react-icons/io";
+import { IoIosArrowDown } from "react-icons/io";
+import Item from './components/DifficultItem';
+import SelectModeSection from './components/SelectModeSection';
+import InputSection from './components/InputSection';
+import { Provider, useSelector } from 'react-redux';
+import { RootState } from './redux/reducer';
+import ListSection from './components/ListSection';
 
-function App() {
-  const [count, setCount] = useState(0)
+export type DifficultType = "Easy" | "Medium" | "Hard"
+
+export default function App() {
+  const dropDownList: DifficultType[] = [
+    "Easy",
+    "Medium",
+    "Hard",
+  ]
+  const [dropdown, setDropdown] = useState(false)
+  const [selected, setSelected] = useState<DifficultType>("Medium")
+
+  const bg = useSelector((state: RootState) => state.bgColor)
 
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <body className={`${bg} bg-opacity-70 flex p-3.5
+        transition-colors transform duration-500 ease-in-out`} >
+      <div className={`flex flex-col 
+      w-mainWidth
+       min-h-max shadow-black bg-slate-100 ${bg != "" ? "shadow-lg" : "shadow-md"}
+        gap-2 rounded-md p-6 `}>
+        <h1 className=' w-full text-center text-3xl' >Todo List</h1>
+
+        <InputSection />
+
+        <ListSection />
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    </body >
   )
 }
-
-export default App

@@ -15,8 +15,6 @@ const iniState = {
 const rootReducer = (state = iniState, action: any) => {
     switch (action.type) {
         case "Update Logging State": {
-            console.log("Update Logging State");
-
             return {
                 ...state,
                 passwordHash: action.payload

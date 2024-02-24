@@ -6,6 +6,7 @@ const app = express()
 const connectDb = require('./src/configs/connectDb');
 const { register, getUserByEmail, signIn, handleCheckpoint } = require('./src/controllers/authController');
 const { addToDb, getGroceryIndex, addItem, getGroceryItem, getProducts, findStorage, addFavorites, removeFavourite } = require('./src/controllers/productController');
+const { addTodo, getTodos } = require('./src/controllers/todoController');
 // const UserModel = require('./src/model/User');
 connectDb();
 
@@ -33,6 +34,10 @@ app.post('/products', getProducts)
 app.get('/storage', findStorage)
 app.post('/favourites', addFavorites)
 app.post('/favourites/remove', removeFavourite)
+
+app.get('/todo', getTodos)
+app.put('/todo/add', addTodo)
+
 
 app.listen(PORT, (error) => {
     if (error) {

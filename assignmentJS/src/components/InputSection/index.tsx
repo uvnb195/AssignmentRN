@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import React, { useEffect, useRef, useState } from "react"
 import SelectModeSection from "../SelectModeSection"
 import { IoCheckmark, IoCloseOutline } from "react-icons/io5"
 import { useDispatch, useSelector } from "react-redux"
@@ -7,8 +7,6 @@ import { PiWarningBold } from "react-icons/pi";
 import { api } from "../../api/client"
 import { addTodo, fetchItem, removeTodo, toggleLoading } from "../../redux/action"
 import { RootState } from "../../redux/reducer"
-import { returnType } from "../../App"
-import { BiEditAlt } from "react-icons/bi"
 
 const InputSection = () => {
     const dispatch = useDispatch()
@@ -132,20 +130,21 @@ const InputSection = () => {
         <>
             <SelectModeSection onChange={(value) => { handleInput((prevState) => ({ ...prevState, difficult: value })) }} />
             <input className={`py-2 px-4 rounded-md border-2 font-bold text-lg
-                focus:outline-none
-                hover:scale-105  bg-primary bg-opacity-5
-                hover:bg-opacity-75 hover:bg-white
+                outline-none border-white hover:border-slate-700
+                hover:scale-105  bg-white bg-opacity-30 hover:bg-slate-200 focus:bg-white focus:bg-opacity-100
+                transition-all duration-300 transform ease-in-out
                 ${showError && errorMessage?.type == "Title" ? "border-error" : "border-slate-700"}
                 `}
                 placeholder="Title"
                 value={input.title}
                 onChange={(v) => handleInput((prevState) => ({ ...prevState, title: v.target.value }))
+
                 }
             />
             <textarea className={`py-2 px-4 rounded-md border-2 resize-none
-                focus:outline-none
-                hover:scale-105 hover:border-2 bg-primary bg-opacity-5
-                hover:bg-opacity-75 hover:bg-white
+                outline-none border-white hover:border-slate-700
+                hover:scale-105 hover:border-2 bg-white bg-opacity-50 hover:bg-slate-200 focus:bg-white focus:bg-opacity-100
+                transition-all duration-300 transform ease-in-out
                 ${showError && errorMessage?.type == "Desc" ? "border-error" : "border-slate-700"}
                 `} placeholder="Description" rows={4} cols={50}
                 value={input.desc}

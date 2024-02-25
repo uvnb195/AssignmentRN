@@ -54,11 +54,12 @@ export default function App() {
   return (
     <body className={`relative ${returnType(bg)} bg-opacity-70 flex p-3.5
         transition-colors transform duration-500 ease-in-out
+        no-scrollbar
         `} >
       <div className='absolute top-0 bottom-0 flex justify-center items-center p-9'>
         <div className={`h-full w-full flex flex-col  shadow-black bg-slate-300 ${bg != "" ? "shadow-lg" : "shadow-md"}
         gap-2 rounded-md p-6 `}>
-          <h1 className=' w-full text-center text-3xl font-semibold' >Todo List</h1>
+          <h1 className=' w-full text-center text-5xl font-semibold' >Todo List</h1>
 
           <InputSection />
 

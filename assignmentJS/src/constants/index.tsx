@@ -1,2 +1,2 @@
 // local machine ip
-export const BASE_URL = 'http://10.0.106.161:3070'
+export const BASE_URL = 'http://192.168.1.26:3070'

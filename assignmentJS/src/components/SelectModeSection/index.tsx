@@ -36,20 +36,20 @@ const SelectModeSection = (props: SelectModeSectionProps) => {
             <button className={` shadow-md
             col-span-1  border-2 ${selected == "Easy" ? "bg-safe hover:border-white" : "hover:border-gray-500 bg-primary bg-opacity-5 hover:bg-opacity-75 hover:bg-white"}
             text-2xl p-1 rounded-md hover:scale-110
-            transition-colors duration-500 transform ease-in-out
+            transition-all duration-500 transform ease-in-out
             `}
                 onClick={() => {
                     setSelected("Easy")
                 }}>Easy</button>
             <button className={`shadow-md
             col-span-1  border-2 ${selected == "Medium" ? "bg-warning hover:border-white" : "hover:border-gray-500 bg-primary bg-opacity-5 hover:bg-opacity-75 hover:bg-white"} text-2xl p-1 rounded-md hover:scale-110
-            transition-colors duration-500 transform ease-in-out`}
+            transition-all duration-500 transform ease-in-out`}
                 onClick={() => {
                     setSelected("Medium")
                 }}>Medium</button>
             <button className={`shadow-md
             col-span-1  border-2 ${selected == "Hard" ? "bg-danger hover:border-white" : "hover:border-gray-500 bg-primary bg-opacity-5 bg-hover:bg-opacity-75 hover:bg-white"} text-2xl p-1 rounded-md hover:scale-110
-            transition-colors duration-500 transform ease-in-out`}
+            transition-all duration-500 transform ease-in-out`}
                 onClick={() => {
                     setSelected("Hard")
                 }}>Hard</button>

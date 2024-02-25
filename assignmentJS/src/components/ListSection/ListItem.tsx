@@ -117,7 +117,7 @@ const ListItem = (props: ListItemProps) => {
                     transition-all duration-500 ease-in-out transform origin-left`}>
 
                     {isDone == true ?
-                        <div className="size-[60px] right-0 z-10 absolute top-0">
+                        <div className="size-[50px] right-0 z-10 absolute top-0">
                             <Lottie className="size-full" animationData={CheckAnim} loop={isHovered ? true : false} autoComplete="true" />
                         </div> : null}
 

@@ -15,6 +15,9 @@ const InputSection = () => {
     const [hoverSubmit, setHoverSubmit] = useState(false);
     const [hoverClear, setHoverClear] = useState(false);
 
+    const [selected, setSelected] = useState(false);
+    const titleInput = useRef<HTMLInputElement>(null)
+
     const [enableClear, setEnableClear] = useState(false);
     const [enableSubmit, setEnableSubmit] = useState(false);
 
@@ -27,6 +30,7 @@ const InputSection = () => {
         if (editItem && editItem.title &&
             editItem.desc &&
             editItem.difficult) {
+            titleInput.current?.focus()
             const state = {
                 title: editItem?.title || "",
                 desc: editItem?.desc || "",
@@ -135,6 +139,7 @@ const InputSection = () => {
                 transition-all duration-300 transform ease-in-out
                 ${showError && errorMessage?.type == "Title" ? "border-error" : "border-slate-700"}
                 `}
+                ref={titleInput}
                 placeholder="Title"
                 value={input.title}
                 onChange={(v) => handleInput((prevState) => ({ ...prevState, title: v.target.value }))

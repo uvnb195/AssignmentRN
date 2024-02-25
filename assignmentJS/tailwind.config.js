@@ -6,8 +6,8 @@ export default {
   ],
   theme: {
     extend: {
-      backgroundImage: {
-        'passed-bg': "url('./src/assets/passed.png')"
+      fontFamily: {
+        'shantell': ["Shantell Sans", "cursive"],
       },
       width: {
         mainWidth: '700px',

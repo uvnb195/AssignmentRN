@@ -2,8 +2,12 @@ import { useState } from "react"
 import { FaCheckDouble, FaMarker } from "react-icons/fa6"
 import { FaRegCircle, FaRegCheckCircle, FaRegTrashAlt } from "react-icons/fa"
 import { api } from "../../api/client"
-import { fetchItem, fetchTodo, removeTodo } from "../../redux/action"
+import { fetchItem, fetchTodo, removeTodo, runDelete, runSuccess, toggleLoading } from "../../redux/action"
 import { useDispatch } from "react-redux"
+import Lottie from "lottie-react"
+
+import CheckAnim from "../../assets/anim/doneItem.json"
+import { capitalFirstWord, capitalWords } from "../../utils/capitalizeFirstLetter"
 
 type ListItemProps = {
     data: {
@@ -79,18 +83,18 @@ const ListItem = (props: ListItemProps) => {
     }
 
     const handleDelete = async () => {
+        dispatch(runDelete(true))
         const res = await api.HandleRequest(`/todo/delete?id=${_id}`, 'post')
         dispatch(removeTodo(_id))
-        console.log("delete:", res);
     }
 
     const handleUpdate = async () => {
+        dispatch(runSuccess(true))
         const res = await api.HandleRequest('/todo/item', 'post', { ...props.data, isDone: true })
         if (res.status == 201) {
             setIsDone(true)
             return
         }
-
         alert("Server Error. Try Again later.")
     }
 
@@ -101,29 +105,33 @@ const ListItem = (props: ListItemProps) => {
     return (
         <li className="cursor-default scale-95 hover:scale-100
         transition-transform duration-200 transform">
-            <div className="w-full relative flex flex-row bg-right-top bg-no-repeat px-4 py-2 rounded-lg shadow-sm shadow-black
-            bg-slate-50
-           "
+            <div className={`w-full relative flex flex-row px-4 py-2 rounded-lg shadow-sm shadow-black
+             ${isDone == true ? "bg-safe-bg" : "bg-warning-bg"} bg-opacity-30`}
                 onMouseOver={() => setIsHovered(true)}
                 onMouseLeave={() => setIsHovered(false)}>
+
                 {/* info */}
-                <div className={`gap-1 flex flex-col w-full 
+                <div className={`relative gap-1 flex flex-col w-full 
                     ${isHovered ? "scale-x-95" : "scalse-x-100"}
-                    ${isDone ? 'bg-right-top bg-no-repeat bg-passed-bg bg-rota bg-[length:50px]' : ''}
-                    
                     delay-300
                     transition-all duration-500 ease-in-out transform origin-left`}>
+
+                    {isDone == true ?
+                        <div className="size-[60px] right-0 z-10 absolute top-0">
+                            <Lottie className="size-full" animationData={CheckAnim} loop={isHovered ? true : false} autoComplete="true" />
+                        </div> : null}
+
                     <div className={`w-max p-1 ml-2 border-white border-2 shadow-sm shadow-black bg-${typeName(difficult)}-bg
                         rounded-md`}>
                         <h3 className={`text-sm col-span-3 self-center text-white font-extrabold`}>{difficult}</h3>
                     </div>
 
                     <div className="grid grid-cols-4 m-0 p-0">
-                        <h3 className="text-2xl font-bold col-span-3 self-center pl-2 overflow-hidden whitespace-nowrap">{title}</h3>
+                        <h3 className="text-2xl font-bold col-span-3 self-center pl-2 overflow-hidden whitespace-nowrap">{capitalWords(title)}</h3>
                         <h6 className="text-sm italic text-opacity-80 font-thin w-full text-right self-center col-span-1">{dateMessage()}</h6>
                     </div>
                     <hr className="col-span-2 h-px" />
-                    <h5 className="text-sm font-thin overflow-hidden row-span-1 col-span-2 self-center text-left pl-2 w-full">{desc}</h5>
+                    <h5 className="text-sm font-thin overflow-hidden row-span-1 col-span-2 self-center text-left pl-2 w-full">{capitalFirstWord(desc)}</h5>
                 </div>
 
                 {/* pop up */}
@@ -141,15 +149,17 @@ const ListItem = (props: ListItemProps) => {
                     </button>
 
                     <button className={`rounded-br-lg hover:ab px-3 origin-center  row-span-1 
-                    ${isDone ? "scale-90 bg-red-800 hover:border-black" : 'scale-100 bg-warning-bg hover:border-transparent'}
-                    transition-all duration-500 ease-in-out transform
-                    border-2`}
+                        ${isDone ? "scale-90 bg-red-800 hover:border-black" : 'scale-100 bg-warning-bg hover:border-transparent'}
+                        transition-all duration-500 ease-in-out transform
+                        border-2`}
                         onMouseOver={() => setIsCheckHovered(true)}
                         onMouseLeave={() => setIsCheckHovered(false)}
                         onClick={() => {
+                            dispatch(toggleLoading(true))
                             isDone
                                 ? handleDelete()
                                 : handleUpdate()
+                            dispatch(toggleLoading(false))
                         }}>
                         {isDone
                             ? <FaRegTrashAlt className={`size-4 ${isCheckHovered ? 'text-black' : 'text-white'}`} />

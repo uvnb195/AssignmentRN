@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux"
 import { changeBackground } from "../../redux"
 import { PiWarningBold } from "react-icons/pi";
 import { api } from "../../api/client"
-import { addTodo, fetchItem, removeTodo } from "../../redux/action"
+import { addTodo, fetchItem, removeTodo, toggleLoading } from "../../redux/action"
 import { RootState } from "../../redux/reducer"
 import { returnType } from "../../App"
 import { BiEditAlt } from "react-icons/bi"
@@ -26,7 +26,9 @@ const InputSection = () => {
     const editItem = useSelector((state: RootState) => state.editItem)
 
     useEffect(() => {
-        if (editItem) {
+        if (editItem && editItem.title &&
+            editItem.desc &&
+            editItem.difficult) {
             const state = {
                 title: editItem?.title || "",
                 desc: editItem?.desc || "",
@@ -81,11 +83,17 @@ const InputSection = () => {
     }
 
     const handleSubmit = async () => {
+        dispatch(toggleLoading(true))
         setShowError(true);
         const validation = validationInput()
         if (validation) {
             let convertInput = {}
-            if (editItem) {
+            console.log("Check edit item:", editItem);
+
+            if (editItem && editItem.title &&
+                editItem.desc &&
+                editItem.difficult) {
+                console.log("update 195");
                 convertInput = ({
                     ...editItem,
                     title: input.title,
@@ -104,6 +112,8 @@ const InputSection = () => {
                     })
                 dispatch(addTodo(convertInput))
             } else {
+                console.log("add new 195");
+
                 convertInput = ({ ...input, createAt: Date.now() })
                 await api.HandleRequest('/todo/add', 'put', convertInput)
                 dispatch(addTodo(convertInput))
@@ -114,6 +124,8 @@ const InputSection = () => {
             setShowError(false)
             // add animation success
         }
+
+        dispatch(toggleLoading(false))
     }
 
     return (
@@ -139,36 +151,41 @@ const InputSection = () => {
                 value={input.desc}
                 onChange={(v) => handleInput((prevState) => ({ ...prevState, desc: v.target.value }))} />
 
-            {/* error message */}
-            <div className={`flex flex-row items-center gap-2 ml-2 origin-left ${showError ? "scale-100" : "scale-0"}
-                transition-transform duration-200 transform ease-in-out
-            `}>
-                <PiWarningBold className="text-error size-5" />
-                <h3 className="text-error text-sm font-bold">{errorMessage?.message || ""}</h3>
-            </div>
+            <div className={`flex flex-row gap-2 justify-between items-center
+                w-full`}>
 
-            {/* button section */}
-            <div className={`flex flex-row gap-2 justify-end items-center`}>
-                <button className={`${!enableClear ? "bg-slate-400" : "bg-error hover:border-slate-700 hover:scale-110 "} p-2 rounded-full border-2
+                {/* error message */}
+                <div className={`flex flex-row items-center gap-2 ml-2 origin-left ${showError ? "scale-100 visible w-[100%]" : "scale-0 collapse"}
+                transition-transform duration-200 transform ease-in-out
+                `}>
+                    <PiWarningBold className="text-error size-5" />
+                    <h3 className="text-error text-sm font-bold">{errorMessage?.message || ""}</h3>
+                </div>
+
+                <div className="flex flex-row gap-2 justify-end items-center
+                w-full">
+                    {/* button section */}
+                    <button className={`${!enableClear ? "bg-slate-400" : "bg-error hover:border-slate-700 hover:scale-110 "} p-2 rounded-full border-2
+                        transition-all duration-300 tranform ease-in-out`}
+                        type="reset"
+                        onClick={() => {
+                            if (enableClear) handleClear()
+                        }}
+                        onMouseOver={() => setHoverClear(true)}
+                        onMouseLeave={() => setHoverClear(false)}>
+                        <IoCloseOutline className={`size-6 ${enableClear && hoverClear ? "text-black" : "text-white"}`} />
+                    </button>
+                    <button className={`${!enableSubmit ? "bg-slate-400" : "bg-submit hover:border-slate-700 hover:scale-110 "} p-2 rounded-full border-2
                 transition-all duration-300 tranform ease-in-out`}
-                    type="reset"
-                    onClick={() => {
-                        if (enableClear) handleClear()
-                    }}
-                    onMouseOver={() => setHoverClear(true)}
-                    onMouseLeave={() => setHoverClear(false)}>
-                    <IoCloseOutline className={`size-6 ${enableClear && hoverClear ? "text-black" : "text-white"}`} />
-                </button>
-                <button className={`${!enableSubmit ? "bg-slate-400" : "bg-submit hover:border-slate-700 hover:scale-110 "} p-2 rounded-full border-2
-                transition-all duration-300 tranform ease-in-out`}
-                    type="submit"
-                    onClick={() => {
-                        if (enableSubmit) handleSubmit()
-                    }}
-                    onMouseOver={() => setHoverSubmit(true)}
-                    onMouseLeave={() => setHoverSubmit(false)}>
-                    <IoCheckmark className={`size-6 ${enableSubmit && hoverSubmit ? "text-black" : "text-white"}`} />
-                </button>
+                        type="submit"
+                        onClick={() => {
+                            if (enableSubmit) handleSubmit()
+                        }}
+                        onMouseOver={() => setHoverSubmit(true)}
+                        onMouseLeave={() => setHoverSubmit(false)}>
+                        <IoCheckmark className={`size-6 ${enableSubmit && hoverSubmit ? "text-black" : "text-white"}`} />
+                    </button>
+                </div>
             </div>
         </>
     )

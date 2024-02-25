@@ -1,10 +1,14 @@
-// import Lottie from "lottie-react"
+import Lottie from "lottie-react"
+import LoadingAnimation from "../../assets/anim/loading.json"
 
-// const Loading = ()=>{
-//     return (
-//         <div>
-//         </div>
-//     )
-// }
+type LoadingProps = {
+    className: string
+}
 
-// export default Loading
+const Loading = (props: LoadingProps) => {
+    return (
+        <Lottie className={`${props.className}`} animationData={LoadingAnimation} loop={true} />
+    )
+}
+
+export default Loading

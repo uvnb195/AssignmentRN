@@ -32,3 +32,24 @@ export const fetchItem = (item: any) => {
         payload: item
     })
 }
+
+export const toggleLoading = (value: Boolean) => {
+    return ({
+        type: "Toggle Loading",
+        payload: value
+    })
+}
+
+export const runSuccess = (value: Boolean) => {
+    return ({
+        type: "Run Success",
+        payload: value
+    })
+}
+
+export const runDelete = (value: Boolean) => {
+    return ({
+        type: "Run Delete",
+        payload: value
+    })
+}
